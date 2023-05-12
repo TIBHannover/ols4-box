@@ -1,4 +1,4 @@
-# EBISPOT OLS
+# EBISPOT OLS4
 
 Configuration of the EBISPOT OLS4 via ansible.
 
@@ -28,6 +28,6 @@ When the installation is complete (a few minutes, depending on the download spee
 
 <http://192.168.98.116:8081/>
 
-## Direct usage of Ansible
-Use playbook.yml for server installation and variables in [ansible/group_vars/](./ansible/group_vars/) to further configure which ontologies will be loaded.
+## Installation with Ansible in CI/CD
+Use playbook.yml for server installation and variables in [ansible/group_vars/all.yml](./ansible/group_vars/all.yml) to further configure which ontologies will be loaded.
 
