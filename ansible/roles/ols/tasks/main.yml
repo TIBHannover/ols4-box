@@ -1,0 +1,39 @@
+
+- name: checkout OLS4 locally
+  git:
+    repo: '{{ ols4_repo }}'
+    dest: '{{ ols4_base_dir }}'
+    force: yes
+    version: '{{ ols4_version }}'
+
+- name: Copy config files
+  copy:
+    src: '{{ item }}'
+    dest: '{{ ols4_base_dir }}/config/'
+  when: (ols4_custom_config_files is defined) and (ols4_custom_config_files != "") and (ols4_custom_config_files is not none)
+  with_items: '{{ backend_ols_custom_config_files }}'
+
+- name: Copy dataload dockerfile
+  copy:
+    src: '{{ dataload_dockerfile }}'
+    dest: '{{ ols4_base_dir }}/dataload/'
+  when: (dataload_dockerfile is defined) and (dataload_dockerfile != "") and (dataload_dockerfile is not none)
+
+- name: Copy backend dockerfile
+  copy:
+    src: '{{ backend_dockerfile }}'
+    dest: '{{ ols4_base_dir }}/backend/'
+  when: (backend_dockerfile is defined) and (backend_dockerfile != "") and (backend_dockerfile is not none)
+
+- name: Copy frontend dockerfile
+  copy:
+    src: '{{ frontend_dockerfile }}'
+    dest: '{{ ols4_base_dir }}/frontend/'
+  when: (frontend_dockerfile is defined) and (frontend_dockerfile != "") and (frontend_dockerfile is not none)
+
+- name: Run docker-compose up -d
+  command: 'docker-compose up -d'
+  args:
+    chdir: '{{ backend_ols4_base_dir }}'
+  environment:
+        OLS4_CONFIG: '{{ ols4_config_file }}'

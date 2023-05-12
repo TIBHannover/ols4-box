@@ -1,0 +1,20 @@
+
+- name: Install docker packages
+  become: yes
+  package:
+    name: ["docker", "docker-compose"]
+    state: present
+  tags:
+    - root-task
+
+- name: Adding docker user to docker group
+  become: yes
+  user:
+    name: '{{ docker_user }}'
+    groups: docker
+    append: yes
+  tags:
+    - root-task
+
+- name: reset ssh connection
+  meta: reset_connection

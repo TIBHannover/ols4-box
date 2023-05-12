@@ -1,0 +1,14 @@
+ols4_repo: https://github.com/TIBHannover/OLS
+ols4_version: master # OLS version that should be installed
+ols4_installation_dir: '{{ ansible_env.HOME }}' # installation directory on the target system
+ols4_base_dir: '{{ backend_ols_installation_dir }}/OLS' # OLS directory on the target system
+ols4_custom_config_files:  # list of all (local) config files that should be copied into the OLS installation
+ols4_config_file:
+backend_dockerfile:
+frontend_dockerfile:
+dataload_dockerfile: 
+alternative_dockercomposefile: 
+docker_user: '{{ ansible_user }}'
+
+
+
