@@ -34,6 +34,6 @@
 - name: Run docker-compose up -d
   command: 'docker-compose up -d'
   args:
-    chdir: '{{ backend_ols4_base_dir }}'
+    chdir: '{{ ols4_base_dir }}'
   environment:
         OLS4_CONFIG: '{{ ols4_config_file }}'
