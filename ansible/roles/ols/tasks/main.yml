@@ -31,16 +31,10 @@
     dest: '{{ ols4_base_dir }}/frontend/'
   when: (frontend_dockerfile is defined) and (frontend_dockerfile != "") and (frontend_dockerfile is not none)
 
-- name: Copy frontend dockerfile
-  copy:
-    src: '{{ frontend_dockerfile }}'
-    dest: '{{ ols4_base_dir }}/frontend/'
-  when: (frontend_dockerfile is defined) and (frontend_dockerfile != "") and (frontend_dockerfile is not none)
-
 - name: Copy frontend envfile
   copy:
     src: '{{ frontend_envfile }}'
-    dest: '{{ ols4_base_dir }}/frontend/'
+    dest: '{{ ols4_base_dir }}/frontend/.env'
   when: (frontend_envfile is defined) and (frontend_envfile != "") and (frontend_envfile is not none)
 
 - name: Run docker-compose up -d
