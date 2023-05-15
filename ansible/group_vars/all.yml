@@ -6,6 +6,7 @@ ols4_custom_config_files:  # list of all (local) config files that should be cop
 ols4_config_file:
 backend_dockerfile:
 frontend_dockerfile:
+frontend_envfile:
 dataload_dockerfile: 
 alternative_dockercomposefile: 
 docker_user: '{{ ansible_user }}'
