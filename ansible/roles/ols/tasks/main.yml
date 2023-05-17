@@ -6,12 +6,12 @@
     force: yes
     version: '{{ ols4_version }}'
 
-- name: Copy config files
+- name: Copy dataload config files
   copy:
     src: '{{ item }}'
-    dest: '{{ ols4_base_dir }}/config/'
-  when: (ols4_custom_config_files is defined) and (ols4_custom_config_files != "") and (ols4_custom_config_files is not none)
-  with_items: '{{ backend_ols_custom_config_files }}'
+    dest: '{{ ols4_base_dir }}/dataload/'
+  when: (dataload_config_files is defined) and (dataload_config_files != "") and (dataload_config_files is not none)
+  with_items: '{{ dataload_config_files }}'
 
 - name: Copy dataload dockerfile
   copy:
