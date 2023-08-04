@@ -9,7 +9,7 @@
 - name: Copy dataload config files
   copy:
     src: '{{ item }}'
-    dest: '{{ ols4_base_dir }}/dataload/'
+    dest: '{{ ols4_base_dir }}/dataload/configs/'
   when: (dataload_config_files is defined) and (dataload_config_files != "") and (dataload_config_files is not none)
   with_items: '{{ dataload_config_files }}'
 
