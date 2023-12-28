@@ -4,6 +4,7 @@ ols4_installation_dir: '{{ ansible_env.HOME }}' # installation directory on the 
 ols4_base_dir: '{{ backend_ols_installation_dir }}/OLS' # OLS directory on the target system
 dataload_config_files:  # list of all dataload related config files that should be copied into the directory
 ols4_config_file: ./dataload/configs/efo.json
+ols4_backend_url:
 backend_dockerfile:
 frontend_dockerfile:
 frontend_envfile:

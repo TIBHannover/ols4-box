@@ -43,6 +43,12 @@
     dest: '{{ ols4_base_dir }}/docker-compose.yml'
   when: (alternative_dockercomposefile is defined) and (alternative_dockercomposefile != "") and (alternative_dockercomposefile is not none)
 
+- name: Replace backend url for swagger
+  command: 'sed -i "s,http://localhost:8080,{{ ols4_backend_url }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/SwaggerConfig.java'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+  when: ols4_backend_url is not none
+
 - name: Run docker-compose up -d
   command: 'docker-compose up -d'
   args:
