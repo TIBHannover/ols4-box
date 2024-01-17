@@ -1,4 +1,4 @@
-ols4_repo: https://github.com/TIBHannover/OLS
+ols4_repo: https://github.com/TIBHannover/ols4
 ols4_version: dev # OLS version that should be installed
 ols4_installation_dir: '{{ ansible_env.HOME }}' # installation directory on the target system
 ols4_base_dir: '{{ backend_ols_installation_dir }}/OLS' # OLS directory on the target system
