@@ -1,0 +1,59 @@
+
+- name: mvn clean install
+  command: 'mvn clean install'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+  environment:
+        OLS4_CONFIG: '{{ ols4_config_file }}'
+
+- name: rdf2json
+  command: 'java -jar rdf2json/target/rdf2json-1.0-SNAPSHOT.jar --config {{ ols4_config_file }} --output {{ ols4_config_file.split('.')[0] }}_out.json'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: rm -rf output_csv && mkdir output_csv
+  command: 'rm -rf output_csv && mkdir output_csv'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: json2neo
+  command: 'java -jar json2neo/target/json2neo-1.0-SNAPSHOT.jar --input {{ ols4_config_file.split('.')[0] }}_out.json --outDir output_csv'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: json2solr
+  command: 'java -jar json2solr/target/json2solr-1.0-SNAPSHOT.jar  --input {{ ols4_config_file.split('.')[0] }}_out.json --outDir output_csv'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: wget ontologies
+  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/ontologies.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: wget classes
+  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/classes.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: wget properties
+  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/properties.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: wget individuals
+  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/individuals.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: wget autocomplete
+  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/autocomplete.jsonl http://127.0.0.1:8983/solr/ols4_autocomplete/update/json/docs?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: csv2neo
+  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -i -d output_csv'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+
