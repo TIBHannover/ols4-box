@@ -1,0 +1,49 @@
+- name: checkout OLS4 locally
+  git:
+    repo: '{{ ols4_repo }}'
+    dest: '{{ ols4_base_dir }}'
+    force: yes
+    version: '{{ ols4_version }}'
+
+- name: Copy dataload config files
+  copy:
+    src: '{{ item }}'
+    dest: '{{ ols4_base_dir }}/dataload/configs/'
+  when: (dataload_config_files is defined) and (dataload_config_files != "") and (dataload_config_files is not none)
+  with_items: '{{ dataload_config_files }}'
+
+- name: Copy dataload dockerfile
+  copy:
+    src: '{{ dataload_dockerfile }}'
+    dest: '{{ ols4_base_dir }}/dataload/'
+  when: (dataload_dockerfile is defined) and (dataload_dockerfile != "") and (dataload_dockerfile is not none)
+
+- name: Copy backend dockerfile
+  copy:
+    src: '{{ backend_dockerfile }}'
+    dest: '{{ ols4_base_dir }}/backend/'
+  when: (backend_dockerfile is defined) and (backend_dockerfile != "") and (backend_dockerfile is not none)
+
+- name: Copy frontend dockerfile
+  copy:
+    src: '{{ frontend_dockerfile }}'
+    dest: '{{ ols4_base_dir }}/frontend/'
+  when: (frontend_dockerfile is defined) and (frontend_dockerfile != "") and (frontend_dockerfile is not none)
+
+- name: Copy frontend envfile
+  copy:
+    src: '{{ frontend_envfile }}'
+    dest: '{{ ols4_base_dir }}/frontend/.env'
+  when: (frontend_envfile is defined) and (frontend_envfile != "") and (frontend_envfile is not none)
+
+- name: Copy docker compose file
+  copy:
+    src: '{{ alternative_dockercomposefile }}'
+    dest: '{{ ols4_base_dir }}/docker-compose.yml'
+  when: (alternative_dockercomposefile is defined) and (alternative_dockercomposefile != "") and (alternative_dockercomposefile is not none)
+
+- name: Replace backend url for swagger
+  command: 'sed -i "s,{{ ols4_default_swagger_url }},{{ ols4_swagger_url }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/SwaggerConfig.java'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+  when: ols4_backend_url is not none
