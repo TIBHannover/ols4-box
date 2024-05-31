@@ -3,8 +3,6 @@
   command: 'mvn clean install'
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
-  environment:
-        OLS4_CONFIG: '{{ ols4_config_file }}'
 
 - name: rdf2json
   command: 'java -DentityExpansionLimit=0 -DtotalEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=0 -Djdk.xml.entityExpansionLimit=0 -jar rdf2json/target/rdf2json-1.0-SNAPSHOT.jar --config {{ ols4_config_file }} --output {{ ols4_config_file.split(".")[0] }}_out.json'

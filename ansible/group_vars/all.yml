@@ -1,9 +1,10 @@
-ols4_repo: https://github.com/TIBHannover/OLS
+ols4_repo: https://github.com/TIBHannover/ols4
 ols4_version: dev # OLS version that should be installed
 ols4_installation_dir: '{{ ansible_env.HOME }}' # installation directory on the target system
-ols4_base_dir: '{{ backend_ols_installation_dir }}/OLS' # OLS directory on the target system
+ols4_base_dir: '{{ backend_ols_installation_dir }}/ols4' # OLS directory on the target system
 dataload_config_files:  # list of all dataload related config files that should be copied into the directory
-ols4_config_file: ./dataload/configs/efo.json
+ols4_config_file: ./dataload/configs/efo.json # config file that includes the metadata of the ontologies to be ingested.
+delimited_ontology_prefixes: # ontology prefixes delimited by commas. This variable can be used in update and removaö of ontologies
 ols4_default_swagger_url: https://www.ebi.ac.uk/ols4
 ols4_swagger_url:
 backend_dockerfile:
