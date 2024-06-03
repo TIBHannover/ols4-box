@@ -1,0 +1,20 @@
+
+- name: mvn clean install
+  command: 'mvn clean install'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload/csv2neo'
+
+- name: remove solr indexes with curl
+  command: 'curl "http://127.0.0.1:8983/solr/ols4_autocomplete/update?commit=true" -H "Content-Type: application/json" -d "{''delete'': {''query'': ''id:{{ item }}*''}}"'
+  loop: '{{ delimited_ontology_prefixes.split(",") }}'
+
+- name: remove solr indexes with curl
+  command: 'curl "http://127.0.0.1:8983/solr/ols4_entities/update?commit=true" -H "Content-Type: application/json" -d "{''delete'': {''query'': ''id:{{ item }}*''}}"'
+  loop: '{{ delimited_ontology_prefixes.split(",") }}'
+
+
+- name: remove neo4j records with csv2neo
+  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -rm {{ item }}'
+  loop: '{{ delimited_ontology_prefixes.split(",") }}'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
