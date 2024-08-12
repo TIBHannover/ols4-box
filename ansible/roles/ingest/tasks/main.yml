@@ -59,6 +59,24 @@
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
+- name: Pause for 5 seconds
+  ansible.builtin.pause:
+    seconds: 5
+
+- name: wget ols4_entities
+  command: 'wget --no-proxy http://127.0.0.1:8983/solr/ols4_entities/update?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: Pause for 5 seconds
+  ansible.builtin.pause:
+    seconds: 5
+
+- name: wget ols4_autocomplete
+  command: 'wget --no-proxy http://127.0.0.1:8983/solr/ols4_autocomplete/update?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
 - name: csv2neo
   command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -i -d {{ ols4_base_dir }}/dataload/output_csv'
   args:
