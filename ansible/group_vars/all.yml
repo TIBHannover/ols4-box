@@ -7,6 +7,9 @@ ols4_config_file: ./dataload/configs/efo.json # config file that includes the me
 delimited_ontology_prefixes: # ontology prefixes delimited by commas. This variable can be used in update and removaö of ontologies
 ols4_default_swagger_url: https://www.ebi.ac.uk/ols4
 ols4_swagger_url:
+ingest_batch_size: 1000
+ingest_pool_size: 20
+ingest_attempts: 5
 backend_dockerfile:
 frontend_dockerfile:
 frontend_envfile:
