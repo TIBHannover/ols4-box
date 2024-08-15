@@ -78,7 +78,7 @@
     chdir: '{{ ols4_base_dir }}/dataload'
 
 - name: csv2neo
-  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -i -d {{ ols4_base_dir }}/dataload/output_csv -bs {{ ingest_batch_size }} -ps {{ ingest_pool_size }}'
+  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -m i -d {{ ols4_base_dir }}/dataload/output_csv -bs {{ ingest_batch_size }} -ps {{ ingest_pool_size }}'
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
