@@ -9,6 +9,7 @@ ols4_default_swagger_url: https://www.ebi.ac.uk/ols4
 ols4_swagger_url:
 ingest_batch_size: 1000
 ingest_pool_size: 20
+ingest_attempts: 5
 backend_dockerfile:
 frontend_dockerfile:
 frontend_envfile:
