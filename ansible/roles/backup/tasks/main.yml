@@ -1,0 +1,86 @@
+
+- name: Stop Neo4J container
+  community.docker.docker_container:
+    name: '{{ neo4j_container }}'
+    state: stopped
+
+- name: Dump Neo4J database with timestamp in a new container
+  ansible.builtin.shell: 'docker run --name dump --entrypoint="/bin/bash" -v {{ neo4j_data_volume }}:/var/lib/neo4j/data neo4j -c "./bin/neo4j-admin database dump neo4j --to-path=/var/lib/neo4j/data && mv /var/lib/neo4j/data/neo4j.dump /var/lib/neo4j/data/tsdb$(date "+%Y.%m.%d-%H.%M.%S").dump"'
+  args:
+    executable: /bin/bash
+
+- name: Remove dump container
+  community.docker.docker_container:
+    name: dump
+    state: absent
+
+- name: Start Neo4J container
+  community.docker.docker_container:
+    name: '{{ neo4j_container }}'
+    state: started
+
+- name: Fetch total number of rows
+  uri:
+    url: "{{ ols4_solr_url }}/ols4_autocomplete/select?q=*:*&rows=0&wt=json"
+    return_content: yes
+  register: solr_response
+
+- name: Extract total number of rows
+  set_fact:
+    total_rows: "{{ solr_response.json.response.numFound | int }}"
+
+- name: Initialize start variable
+  set_fact:
+    start: 0
+
+- name: Dump Solr index in batches
+  block:
+    - name: Fetch batch of rows
+      uri:
+        url: "{{ ols4_solr_url }}/ols4_autocomplete/select?q=*:*&wt=csv&rows=10000&start={{ start }}"
+        return_content: yes
+      register: batch_response
+    - name: Save batch to file
+      copy:
+        content: "{{ batch_response.content }}"
+        dest: "solr_autocomplete_dump_part{{ start // 10000 + 1 }}.csv"
+    - name: Increment start variable
+      set_fact:
+        start: start + 10000
+      until: start >= total_rows
+
+- name: Combine all parts into a single file
+  shell: cat solr_autocomplete_dump_part*.csv > solr_autocomplete_dump.csv
+
+- name: Fetch total number of rows
+  uri:
+    url: "{{ ols4_solr_url }}/ols4_entities/select?q=*:*&rows=0&wt=json"
+    return_content: yes
+  register: solr_response
+
+- name: Extract total number of rows
+  set_fact:
+    total_rows: "{{ solr_response.json.response.numFound | int }}"
+
+- name: Initialize start variable
+  set_fact:
+    start: 0
+
+- name: Dump Solr index in batches
+  block:
+    - name: Fetch batch of rows
+      uri:
+        url: "{{ ols4_solr_url }}/ols4_entities/select?q=*:*&wt=csv&rows=10000&start={{ start }}"
+        return_content: yes
+      register: batch_response
+    - name: Save batch to file
+      copy:
+        content: "{{ batch_response.content }}"
+        dest: "solr_entities_dump_part{{ start // 10000 + 1 }}.csv"
+    - name: Increment start variable
+      set_fact:
+        start: start + 10000
+      until: start >= total_rows
+
+- name: Combine all parts into a single file
+  shell: cat solr_entities_dump_part*.csv > solr_entities_dump.csv

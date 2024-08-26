@@ -7,6 +7,7 @@ ols4_config_file: ./dataload/configs/efo.json # config file that includes the me
 delimited_ontology_prefixes: # ontology prefixes delimited by commas. This variable can be used in update and removaö of ontologies
 ols4_default_swagger_url: https://www.ebi.ac.uk/ols4
 ols4_swagger_url:
+ols4_solr_url: http://localhost:8983/solr
 ingest_batch_size: 1000
 ingest_pool_size: 20
 ingest_attempts: 5
@@ -15,6 +16,9 @@ frontend_dockerfile:
 frontend_envfile:
 dataload_dockerfile: 
 alternative_dockercomposefile: 
+neo4j_data_volume: ols4_ols4-neo4j-data
+neo4j_container: ols4_ols4-neo4j_1
+solr_container: ols4_ols4-solr_1
 docker_user: '{{ ansible_user }}'
 
 
