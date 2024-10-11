@@ -42,7 +42,7 @@
     dest: '{{ ols4_base_dir }}/docker-compose.yml'
   when: (alternative_dockercomposefile is defined) and (alternative_dockercomposefile != "") and (alternative_dockercomposefile is not none)
 
-  - name: Copy wodbs docker compose file
+- name: Copy wodbs docker compose file
   copy:
     src: '{{ alternative_wodbs_dockercomposefile }}'
     dest: '{{ ols4_base_dir }}/docker-compose-wodbs.yml'
