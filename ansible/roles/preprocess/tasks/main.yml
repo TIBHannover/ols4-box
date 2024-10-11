@@ -42,6 +42,12 @@
     dest: '{{ ols4_base_dir }}/docker-compose.yml'
   when: (alternative_dockercomposefile is defined) and (alternative_dockercomposefile != "") and (alternative_dockercomposefile is not none)
 
+  - name: Copy wodbs docker compose file
+  copy:
+    src: '{{ alternative_wodbs_dockercomposefile }}'
+    dest: '{{ ols4_base_dir }}/docker-compose-wodbs.yml'
+  when: (alternative_wodbs_dockercomposefile is defined) and (alternative_wodbs_dockercomposefile != "") and (alternative_wodbs_dockercomposefile is not none)
+
 - name: Replace backend url for swagger
   command: 'sed -i "s,{{ ols4_default_swagger_url }},{{ ols4_swagger_url }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/SwaggerConfig.java'
   args:
