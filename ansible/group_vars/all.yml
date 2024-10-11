@@ -5,8 +5,9 @@ ols4_base_dir: '{{ backend_ols_installation_dir }}/ols4' # OLS directory on the 
 dataload_config_files:  # list of all dataload related config files that should be copied into the directory
 ols4_config_file: ./dataload/configs/efo.json # config file that includes the metadata of the ontologies to be ingested.
 delimited_ontology_prefixes: # ontology prefixes delimited by commas. This variable can be used in update and removaö of ontologies
+ols4_hostname: localhost
 ols4_default_swagger_url: https://www.ebi.ac.uk/ols4
-ols4_swagger_url:
+ols4_swagger_url: http://localhost:8080
 ingest_batch_size: 1000
 ingest_pool_size: 20
 ingest_attempts: 5
@@ -15,6 +16,7 @@ frontend_dockerfile:
 frontend_envfile:
 dataload_dockerfile: 
 alternative_dockercomposefile: 
+alternative_wodbs_dockercomposefile:
 docker_user: '{{ ansible_user }}'
 
 
