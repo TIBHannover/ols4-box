@@ -1,5 +1,5 @@
 - name: Run docker-compose -f docker-compose-wodbs.yml up -d
-  command: 'docker-compose up -f docker-compose-wodbs.yml -d'
+  command: 'docker-compose -f docker-compose-wodbs.yml up -d'
   args:
     chdir: '{{ ols4_base_dir }}'
   environment:
