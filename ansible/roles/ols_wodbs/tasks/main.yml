@@ -1,0 +1,6 @@
+- name: Run docker-compose -f docker-compose-wodbs.yml up -d
+  command: 'docker-compose up -f {{ alternative_wodbs_dockercomposefile }} -d'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+  environment:
+        HOST: '{{ ols4_hostname }}'
