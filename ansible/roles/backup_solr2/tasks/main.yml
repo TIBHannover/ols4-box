@@ -1,0 +1,9 @@
+- name: backup ols4_entities
+  command: 'curl "{{ ols4_solr_url }}/ols4_entities/replication?command=backup&location={{ backend_ols_installation_dir }}/ols4-solr-data"'
+
+- name: Pause for 5 seconds
+  ansible.builtin.pause:
+    seconds: 5
+
+- name: backup ols4_autocomplete
+  command: 'curl "{{ ols4_solr_url }}/ols4_autocomplete/replication?command=backup&location={{ backend_ols_installation_dir }}/ols4-solr-data"'
