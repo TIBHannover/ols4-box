@@ -1,9 +1,3 @@
-- name: Recursively grant privileges in dataload directory
-  ansible.builtin.file:
-    path: '{{ ols4_base_dir }}/dataload'
-    state: directory
-    recurse: yes
-    mode: '0777'
 - name: Run docker-compose up -d
   command: 'docker-compose up -d'
   args:
