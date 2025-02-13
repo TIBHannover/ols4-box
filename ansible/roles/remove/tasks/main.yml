@@ -2,7 +2,7 @@
 - name: mvn clean install
   command: 'mvn clean install'
   args:
-    chdir: '{{ ols4_base_dir }}/dataload/csv2neo'
+    chdir: '{{ ols4_base_dir }}'
   environment:
     PATH: '{{ ansible_env.PATH }}:{{ maven_path }}'
 
