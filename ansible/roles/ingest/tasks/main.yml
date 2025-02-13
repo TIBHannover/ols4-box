@@ -34,29 +34,22 @@
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
-- name: wget ontologies
-  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/ontologies.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
+- name: wget entities and autocomplete
+  shell: |
+    FILES=output_csv/*_*.jsonl
+    for f in $FILES
+    do
+      echo "$f"
+      if [[ $f == *_ontologies.jsonl ]] || [[ $f == *_classes.jsonl ]] || [[ $f == *_properties.jsonl ]] || [[ $f == *_individuals.jsonl ]]; then
+        echo 'is being added as entity'
+        wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file $f http://{{ ols4_hostname }}:8983/solr/ols4_entities/update/json/docs?commit=true
+      elif [[ $f == *_autocomplete.jsonl ]]; then
+        echo 'is being added as autocomplete'
+        wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file $f http://{{ ols4_hostname }}:8983/solr/ols4_autocomplete/update/json/docs?commit=true
+      fi
+    done
   args:
-    chdir: '{{ ols4_base_dir }}/dataload'
-
-- name: wget classes
-  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/classes.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
-  args:
-    chdir: '{{ ols4_base_dir }}/dataload'
-
-- name: wget properties
-  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/properties.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
-  args:
-    chdir: '{{ ols4_base_dir }}/dataload'
-
-- name: wget individuals
-  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/individuals.jsonl http://127.0.0.1:8983/solr/ols4_entities/update/json/docs?commit=true'
-  args:
-    chdir: '{{ ols4_base_dir }}/dataload'
-
-- name: wget autocomplete
-  command: 'wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file output_csv/autocomplete.jsonl http://127.0.0.1:8983/solr/ols4_autocomplete/update/json/docs?commit=true'
-  args:
+    executable: /bin/bash
     chdir: '{{ ols4_base_dir }}/dataload'
 
 - name: Pause for 5 seconds
@@ -64,7 +57,7 @@
     seconds: 5
 
 - name: wget ols4_entities
-  command: 'wget --no-proxy http://127.0.0.1:8983/solr/ols4_entities/update?commit=true'
+  command: 'wget --no-proxy http://{{ ols4_hostname }}:8983/solr/ols4_entities/update?commit=true'
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
@@ -73,12 +66,12 @@
     seconds: 5
 
 - name: wget ols4_autocomplete
-  command: 'wget --no-proxy http://127.0.0.1:8983/solr/ols4_autocomplete/update?commit=true'
+  command: 'wget --no-proxy http://{{ ols4_hostname }}:8983/solr/ols4_autocomplete/update?commit=true'
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
 - name: csv2neo
-  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -m i -d {{ ols4_base_dir }}/dataload/output_csv -bs {{ ingest_batch_size }} -ps {{ ingest_pool_size }} -t {{ ingest_attempts }}'
+  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -m i -d {{ ols4_base_dir }}/dataload/output_csv -bs {{ ingest_batch_size }} -ps {{ ingest_pool_size }} -t {{ ingest_attempts }} -uri neo4j://{{ ols4_hostname }}'
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
