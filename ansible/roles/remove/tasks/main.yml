@@ -3,6 +3,8 @@
   command: 'mvn clean install'
   args:
     chdir: '{{ ols4_base_dir }}/dataload/csv2neo'
+  environment:
+    PATH: '{{ ansible_env.PATH }}:{{ maven_path }}'
 
 - name: remove solr indexes with curl
   command: 'curl "http://{{ ols4_hostname }}:8983/solr/ols4_autocomplete/update?commit=true" -H "Content-Type: application/json" -d "{''delete'': {''query'': ''id:{{ item }}*''}}"'
