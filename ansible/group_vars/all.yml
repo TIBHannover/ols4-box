@@ -17,6 +17,7 @@ frontend_envfile:
 dataload_dockerfile: 
 alternative_dockercomposefile: 
 alternative_wodbs_dockercomposefile:
+maven_path: /usr/bin
 docker_user: '{{ ansible_user }}'
 
 
