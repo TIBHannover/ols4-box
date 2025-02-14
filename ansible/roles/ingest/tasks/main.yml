@@ -7,14 +7,14 @@
     PATH: '{{ ansible_env.PATH }}:{{ maven_path }}'
 
 - name: rdf2json
-  command: 'java -DentityExpansionLimit=0 -DtotalEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=0 -Djdk.xml.entityExpansionLimit=0 -jar rdf2json/target/rdf2json-1.0-SNAPSHOT.jar --config {{ ols4_config_file }} --output {{ ols4_config_file.split(".")[0] }}_out.json'
+  command: 'java -DentityExpansionLimit=0 -DtotalEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=0 -Djdk.xml.entityExpansionLimit=0 -jar dataload/rdf2json/target/rdf2json-1.0-SNAPSHOT.jar --config {{ ols4_config_file }} --output {{ ols4_config_file.split(".")[0] }}_out.json'
   args:
-    chdir: '{{ ols4_base_dir }}/dataload'
+    chdir: '{{ ols4_base_dir }}'
 
 - name: linker
-  command: 'java -jar linker/target/linker-1.0-SNAPSHOT.jar --input {{ ols4_config_file.split(".")[0] }}_out.json --output {{ ols4_config_file.split(".")[0] }}_out.jsonl'
+  command: 'java -jar dataload/linker/target/linker-1.0-SNAPSHOT.jar --input {{ ols4_config_file.split(".")[0] }}_out.json --output {{ ols4_config_file.split(".")[0] }}_out.jsonl'
   args:
-    chdir: '{{ ols4_base_dir }}/dataload'
+    chdir: '{{ ols4_base_dir }}'
 
 - name: Delete content & directory
   ansible.builtin.file:
@@ -27,14 +27,14 @@
     state: directory
 
 - name: json2neo
-  command: 'java -jar json2neo/target/json2neo-1.0-SNAPSHOT.jar --input {{ ols4_config_file.split(".")[0] }}_out.jsonl --outDir {{ ols4_base_dir }}/dataload/output_csv'
+  command: 'java -jar dataload/json2neo/target/json2neo-1.0-SNAPSHOT.jar --input {{ ols4_config_file.split(".")[0] }}_out.jsonl --outDir {{ ols4_base_dir }}/dataload/output_csv'
   args:
-    chdir: '{{ ols4_base_dir }}/dataload'
+    chdir: '{{ ols4_base_dir }}'
 
 - name: json2solr
-  command: 'java -jar json2solr/target/json2solr-1.0-SNAPSHOT.jar  --input {{ ols4_config_file.split(".")[0] }}_out.jsonl --outDir {{ ols4_base_dir }}/dataload/output_csv'
+  command: 'java -jar dataload/json2solr/target/json2solr-1.0-SNAPSHOT.jar  --input {{ ols4_config_file.split(".")[0] }}_out.jsonl --outDir {{ ols4_base_dir }}/dataload/output_csv'
   args:
-    chdir: '{{ ols4_base_dir }}/dataload'
+    chdir: '{{ ols4_base_dir }}'
 
 - name: wget entities and autocomplete
   shell: |
