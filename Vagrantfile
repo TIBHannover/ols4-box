@@ -4,7 +4,7 @@
 Vagrant.configure("2") do |config|
 
   config.vm.define "ols-vm" do |srv|
-    srv.vm.box = "debian/buster64"
+    srv.vm.box = "debian/bookworm64"
     srv.ssh.insert_key = false
     srv.vm.hostname = "ols.box"
     srv.vm.network :private_network, ip: "192.168.98.116"
