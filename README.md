@@ -3,7 +3,7 @@
 Configuration of the EBISPOT OLS4 via ansible.
 
 Documentation see also
-* https://github.com/EBISPOT/ols4
+* https://github.com/TIBHannover/ols4
 * https://www.ebi.ac.uk/ols4/downloads
 
 ## Installation on local system for testing

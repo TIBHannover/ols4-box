@@ -49,7 +49,13 @@
   when: (alternative_wodbs_dockercomposefile is defined) and (alternative_wodbs_dockercomposefile != "") and (alternative_wodbs_dockercomposefile is not none)
 
 - name: Replace backend url for swagger
-  command: 'sed -i "s,{{ ols4_default_swagger_url }},{{ ols4_swagger_url }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/SwaggerConfig.java'
+  command: 'sed -i "s,{{ ols4_default_backend_url }},{{ ols4_backend_url }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/SwaggerConfig.java'
   args:
     chdir: '{{ ols4_base_dir }}'
   when: ols4_backend_url is not none
+
+- name: Replace backend url for frontend
+  command: 'sed -i "s,{{ ols4_default_backend_url }},{{ ols4_backend_url }},g" frontend/.env'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+  when: ols4_backend_url is not none  
