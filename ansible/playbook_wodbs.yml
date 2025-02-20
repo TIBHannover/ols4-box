@@ -1,15 +1,15 @@
 
 - hosts: all
   roles:
-    - git
+    - role: git
       tags:
         - prerequisites
-    - docker
+    - role: docker
       tags:
         - prerequisites
-    - preprocess
+    - role: preprocess
       tags:
         - preprocess
-    - ols_wodbs
+    - role: ols_wodbs
       tags:
         - deploy

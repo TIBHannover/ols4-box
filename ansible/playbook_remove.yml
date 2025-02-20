@@ -1,12 +1,12 @@
 
 - hosts: all
   roles:
-    - maven
+    - role: maven
       tags:
         - prerequisites
-    - preprocess
+    - role: preprocess
       tags:
         - preprocess
-    - remove
+    - role: remove
       tags:
         - deploy
