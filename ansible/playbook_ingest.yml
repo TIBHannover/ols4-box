@@ -2,5 +2,11 @@
 - hosts: all
   roles:
     - maven
+      tags:
+        - prerequisites
     - preprocess
+      tags:
+        - preprocess
     - ingest
+      tags:
+        - deploy

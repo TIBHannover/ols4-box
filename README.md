@@ -1,6 +1,6 @@
-# EBISPOT OLS4
+# TIB OLS4 Based Terminology Service
 
-Configuration of the EBISPOT OLS4 via ansible.
+Configuration of the TIB OLS4 based Terminology Service via ansible.
 
 Documentation see also
 * https://github.com/TIBHannover/ols4
@@ -29,5 +29,5 @@ When the installation is complete (a few minutes, depending on the download spee
 <http://192.168.98.116:8081/>
 
 ## Installation with Ansible in CI/CD
-Use playbook.yml for server installation and variables in [ansible/group_vars/all.yml](./ansible/group_vars/all.yml) to further configure which ontologies will be loaded.
+Use playbook.yml for server installation and variables in [ansible/group_vars/all.yml](./ansible/group_vars/all.yml) to further configure deployment parameters and the ontologies to be loaded.
 
