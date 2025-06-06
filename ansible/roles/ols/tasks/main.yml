@@ -1,6 +1,33 @@
-- name: Run docker-compose up -d
-  command: 'docker-compose up -d'
+- name: Check if legacy docker-compose is available
+  ansible.builtin.command: which docker-compose
+  register: docker_compose_legacy
+  ignore_errors: yes
+
+- name: Check if new docker compose plugin is available
+  ansible.builtin.command: docker compose version
+  register: docker_compose_plugin
+  ignore_errors: yes
+
+- name: Set docker_compose_command fact
+  ansible.builtin.set_fact:
+    docker_compose_command: >-
+      {% if docker_compose_legacy.rc == 0 %}
+        docker-compose
+      {% elif docker_compose_plugin.rc == 0 %}
+        docker compose
+      {% else %}
+        ""
+      {% endif %}
+
+- name: Fail if no docker-compose available
+  ansible.builtin.fail:
+    msg: "Neither 'docker-compose' nor 'docker compose' is available on the system."
+  when: docker_compose_command == ""
+
+- name: Run docker-compose up
+  ansible.builtin.shell: "{{ docker_compose_command }} up -d"
   args:
     chdir: '{{ ols4_base_dir }}'
   environment:
-        OLS4_CONFIG: '{{ ols4_config_file }}'
+    OLS4_CONFIG: '{{ ols4_config_file }}'
+
