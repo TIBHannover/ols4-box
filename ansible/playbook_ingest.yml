@@ -10,3 +10,6 @@
     - role: ingest
       tags:
         - deploy
+    - role: relink
+      tags:
+        - update

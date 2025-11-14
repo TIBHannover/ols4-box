@@ -9,6 +9,7 @@ ols4_hostname: localhost
 ols4_default_backend_url: http://localhost:8080
 ols4_backend_url: https://api.terminology.tib.eu
 ingest_batch_size: 1000
+relink_page_size: 1000
 ingest_pool_size: 20
 ingest_attempts: 5
 backend_dockerfile:
