@@ -40,9 +40,6 @@
       if [[ $f == *_ontologies.jsonl ]] || [[ $f == *_classes.jsonl ]] || [[ $f == *_properties.jsonl ]] || [[ $f == *_individuals.jsonl ]]; then
         echo 'is being added as entity'
         wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file $f http://{{ ols4_hostname }}:8983/solr/ols4_entities/update/json/docs?commit=true
-      elif [[ $f == *_autocomplete.jsonl ]]; then
-        echo 'is being added as autocomplete'
-        wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file $f http://{{ ols4_hostname }}:8983/solr/ols4_autocomplete/update/json/docs?commit=true
       fi
     done
   args:
@@ -55,15 +52,6 @@
 
 - name: wget ols4_entities
   command: 'wget --no-proxy http://{{ ols4_hostname }}:8983/solr/ols4_entities/update?commit=true'
-  args:
-    chdir: '{{ ols4_base_dir }}/dataload'
-
-- name: Pause for 5 seconds
-  ansible.builtin.pause:
-    seconds: 5
-
-- name: wget ols4_autocomplete
-  command: 'wget --no-proxy http://{{ ols4_hostname }}:8983/solr/ols4_autocomplete/update?commit=true'
   args:
     chdir: '{{ ols4_base_dir }}/dataload'
 
