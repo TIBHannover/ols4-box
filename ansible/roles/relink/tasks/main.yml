@@ -1,0 +1,63 @@
+
+- name: mvn clean install
+  command: 'mvn clean install'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+  environment:
+    PATH: '{{ ansible_env.PATH }}:{{ maven_path }}'
+
+- name: linker
+  command: 'java -jar dataload/linker/target/linker-1.0-SNAPSHOT.jar --input http://{{ ols4_hostname }}:8080 --service --json --pageSize {{ relink_page_size }} --output {{ ols4_config_file.split(".")[0] }}_out_service.jsonl'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+
+- name: Delete content & directory
+  ansible.builtin.file:
+    state: absent
+    path: '{{ ols4_base_dir }}/dataload/output_update_csv'
+
+- name: Creates directory
+  ansible.builtin.file:
+    path: '{{ ols4_base_dir }}/dataload/output_update_csv'
+    state: directory
+
+- name: json2neo
+  command: 'java -jar dataload/json2neo/target/json2neo-1.0-SNAPSHOT.jar --input {{ ols4_config_file.split(".")[0] }}_out_service.jsonl --outDir {{ ols4_base_dir }}/dataload/output_update_csv'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+
+- name: json2solr
+  command: 'java -jar dataload/json2solr/target/json2solr-1.0-SNAPSHOT.jar  --input {{ ols4_config_file.split(".")[0] }}_out_service.jsonl --outDir {{ ols4_base_dir }}/dataload/output_update_csv'
+  args:
+    chdir: '{{ ols4_base_dir }}'
+
+- name: wget entities and autocomplete
+  shell: |
+    FILES=output_update_csv/*_*.jsonl
+    for f in $FILES
+    do
+      echo "$f"
+      if [[ $f == *_ontologies.jsonl ]] || [[ $f == *_classes.jsonl ]] || [[ $f == *_properties.jsonl ]] || [[ $f == *_individuals.jsonl ]]; then
+        echo 'is being added as entity'
+        wget --method POST --no-proxy -O - --server-response --content-on-error=on --header="Content-Type: application/json" --body-file $f http://{{ ols4_hostname }}:8983/solr/ols4_entities/update/json/docs?commit=true
+      fi
+    done
+  args:
+    executable: /bin/bash
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: Pause for 5 seconds
+  ansible.builtin.pause:
+    seconds: 5
+
+- name: wget ols4_entities
+  command: 'wget --no-proxy http://{{ ols4_hostname }}:8983/solr/ols4_entities/update?commit=true'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+- name: csv2neo
+  command: 'java -jar csv2neo/target/csv2neo-1.0-SNAPSHOT.jar -m u -d {{ ols4_base_dir }}/dataload/output_update_csv -bs {{ ingest_batch_size }} -ps {{ ingest_pool_size }} -t {{ ingest_attempts }} -uri neo4j://{{ ols4_hostname }}'
+  args:
+    chdir: '{{ ols4_base_dir }}/dataload'
+
+
