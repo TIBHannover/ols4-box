@@ -10,3 +10,6 @@
     - role: remove
       tags:
         - deploy
+    - role: relink
+      tags:
+        - update
