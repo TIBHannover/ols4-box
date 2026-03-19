@@ -55,7 +55,7 @@
   when: ols4_backend_url is not none
 
 - name: Replace matomo token for swagger
-  command: 'sed -i "s,your-token-here,{{ matomo_token }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/MatomoConfig.java'
+  command: 'sed -i "s,your1token2here3your4token5here6,{{ matomo_token }},g" backend/src/main/java/uk/ac/ebi/spot/ols/config/MatomoConfig.java'
   args:
     chdir: '{{ ols4_base_dir }}'
   when: matomo_token is not none
