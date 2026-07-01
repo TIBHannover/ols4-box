@@ -12,7 +12,7 @@ ingest_batch_size: 1000
 relink_page_size: 1000
 ingest_pool_size: 20
 ingest_attempts: 5
-matomo_token:
+matomo_token: # if it is needed to track the deployed instance from Matomo, then a valid value should be assigned to this variable.
 backend_dockerfile:
 frontend_dockerfile:
 frontend_envfile:
